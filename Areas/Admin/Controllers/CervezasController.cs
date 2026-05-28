@@ -94,7 +94,6 @@ namespace TiendaWeb.Areas.Admin.Controllers
         {
             if (id != cerveza.Id) return NotFound();
 
-            // 🚨 CRÍTICO: Eliminamos las validaciones implícitas para que no rebote por datos complejos
             ModelState.Remove("Estilo");
             ModelState.Remove("UrlImagen");
 
@@ -105,10 +104,8 @@ namespace TiendaWeb.Areas.Admin.Controllers
                     string rutaPrincipal = _hostEnvironment.WebRootPath;
                     var archivos = HttpContext.Request.Form.Files;
 
-                    // Escenario 1: El usuario seleccionó un NUEVO archivo de imagen
                     if (archivos.Count > 0 && archivos[0].Length > 0)
                     {
-                        // 1. Generamos un nombre único para la nueva foto
                         string nombreArchivo = Guid.NewGuid().ToString() + Path.GetExtension(archivos[0].FileName);
                         string carpetaDestino = Path.Combine(rutaPrincipal, "imagenes", "cervezas");
 
@@ -119,21 +116,15 @@ namespace TiendaWeb.Areas.Admin.Controllers
 
                         string rutaCompletaFisica = Path.Combine(carpetaDestino, nombreArchivo);
 
-                        // 2. Guardamos físicamente el nuevo archivo en el disco
                         using (var fileStream = new FileStream(rutaCompletaFisica, FileMode.Create))
                         {
                             await archivos[0].CopyToAsync(fileStream);
                         }
 
-                        // (Opcional) Aquí se podría borrar la foto vieja del disco para no acumular basura, 
-                        // pero para el examen, con asignar la nueva ruta es más que suficiente:
                         cerveza.UrlImagen = "/imagenes/cervezas/" + nombreArchivo;
                     }
                     else
                     {
-                        // Escenario 2: No se subió ningún archivo nuevo.
-                        // 🚨 truco de EF CORE: Buscamos la cerveza original en la base de datos (sin trackearla) 
-                        // para recuperar la ruta de la imagen que ya tenía y no perderla.
                         var cervezaOriginal = await _context.Cervezas.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
                         if (cervezaOriginal != null)
                         {
