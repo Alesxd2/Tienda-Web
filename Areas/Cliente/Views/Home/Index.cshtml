@@ -1,0 +1,62 @@
+﻿@model IEnumerable<TiendaWeb.Models.Cerveza>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div id="carouselExampleIndicators" class="carousel slide">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    </div>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="/imagenes/slider/artesanal.jpg" class="d-block w-100" alt="Variedad Artesanal" style="max-height: 400px; object-fit: cover;">
+        </div>
+        <div class="carousel-item">
+            <img src="/imagenes/slider/cervezas.jpg" class="d-block w-100" alt="Nuestras Cervezas" style="max-height: 400px; object-fit: cover;">
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center mb-4">
+            <h1>Últimas Cervezas</h1>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        @if (Model.Count() > 0)
+        {
+            @foreach (var cerveza in Model.OrderBy(c => c.Id))
+            {
+                <div class="col-sm-12 col-md-3 d-flex align-items-stretch">
+                    <div class="card w-100 h-100">
+
+                        <img src="@cerveza.UrlImagen" class="card-img-top" alt="..." style="height: 200px; object-fit: contain; background: #fafafa;">
+
+                        <div class="card-body">
+                            <h5 class="card-title">@cerveza.nombre</h5>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">@Html.DisplayNameFor(modelItem => cerveza.IdEstilo): @cerveza.Estilo.Nombre</li>
+                            <li class="list-group-item">@Html.DisplayNameFor(modelItem => cerveza.alcohol): @cerveza.alcohol</li>
+                            <li class="list-group-item">@Html.DisplayNameFor(modelItem => cerveza.precio): @cerveza.precio</li>
+                        </ul>
+                        <div class="card-body">
+                            <a asp-controller="Home" asp-action="Detalles" asp-route-id="@cerveza.Id" class="btn btn-primary w-100">Detalles</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

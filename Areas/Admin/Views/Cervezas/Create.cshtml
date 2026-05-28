@@ -1,0 +1,90 @@
+@model TiendaWeb.Models.Cerveza
+
+@{
+    ViewData["Title"] = "Agregar Nueva Cerveza";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">Panel de Administración</a>
+            <div class="navbar-nav">
+                <a class="nav-link" href="/Admin/Estilos">Estilos</a>
+                <a class="nav-link active" href="/Admin/Cervezas">Cervezas</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="max-width: 600px;">
+        <div class="card shadow-sm border-0 m-4">
+            <div class="card-header bg-primary text-white p-3">
+                <h3 class="card-title m-0 h5">Registrar Nuevo Producto</h3>
+            </div>
+
+            <div class="card-body p-4">
+                <form asp-action="Create" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="nombre" class="form-label fw-bold">Nombre del Producto</label>
+                        <input asp-for="nombre" class="form-control" placeholder="Ej. IPA Imperial" />
+                        <span asp-validation-for="nombre" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="alcohol" class="form-label fw-bold">Porcentaje de Alcohol (%)</label>
+                        <input asp-for="alcohol" class="form-control" type="number" step="0.1" placeholder="Ej. 6.5" />
+                        <span asp-validation-for="alcohol" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="IdEstilo" class="form-label fw-bold">Estilo</label>
+                        <select asp-for="IdEstilo" class="form-select"
+                                asp-items="@(new SelectList(ViewBag.Estilos, "Id", "Nombre"))">
+                            <option value="">-- Selecciona un Estilo --</option>
+                        </select>
+                        <span asp-validation-for="IdEstilo" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="precio" class="form-label fw-bold">Precio ($)</label>
+                        <input asp-for="precio" class="form-control" type="number" step="0.01" placeholder="Ej. 4.50" />
+                        <span asp-validation-for="precio" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Imagen del Producto</label>
+                        <input type="file" id="subidaArchivo" name="archivoImagen" class="form-control" accept="image/*" />
+                        <span asp-validation-for="UrlImagen" class="text-danger"></span>
+                    </div>
+
+                    @if (Model != null && !string.IsNullOrEmpty(Model.UrlImagen))
+                    {
+                        <div class="mb-4 text-center">
+                            <p class="text-muted small fw-bold">Imagen actual:</p>
+                            <img src="@Model.UrlImagen" class="img-thumbnail" style="max-height: 200px;" />
+                        </div>
+                    }
+
+                    <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                        <a href="/Admin/Cervezas" class="btn btn-outline-secondary">Regresar al Listado</a>
+                        <button type="submit" class="btn btn-success px-4">Guardar Registro</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
